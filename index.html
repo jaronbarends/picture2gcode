@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+	<meta charset="utf-8">
+
+	<title>GCode</title>
+
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+	<link type="text/css" rel="stylesheet" href="css/styles.css" />
+
+</head>
+
+<body>
+	<!-- <h1></h1> -->
+	<!-- all photos under Creative Commons Zero license -->
+	<!-- https://www.pexels.com/photo-license/ -->
+
+	<!-- http://www.thuijzer.nl/image2gcode/ -->
+
+	<form id="image-form" action="">
+
+		<div id="btn-area" class="btn-area">
+			<div id="capture-btn" class="btn btn--capture">
+				<!--
+				<svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 100 110" x="0px" y="0px"><path d="M92.84,36.52a10,10,0,0,0-10-10H70.7l-1.29-5.16a10,10,0,0,0-9.7-7.57H40.29a10,10,0,0,0-9.7,7.57L29.3,26.52H17.16a10,10,0,0,0-10,10V76.21a10,10,0,0,0,10,10H82.84a10,10,0,0,0,10-10Zm-4,39.69a6,6,0,0,1-6,6H17.16a6,6,0,0,1-6-6V36.52a6,6,0,0,1,6-6H30.86A2,2,0,0,0,32.8,29l1.67-6.67a6,6,0,0,1,5.82-4.54H59.71a6,6,0,0,1,5.82,4.54L67.2,29a2,2,0,0,0,1.94,1.51H82.84a6,6,0,0,1,6,6Z" fill="#fff"/><path d="M50,33.21a21,21,0,1,0,21,21A21.07,21.07,0,0,0,50,33.21ZM50,71.3a17,17,0,1,1,17-17A17.06,17.06,0,0,1,50,71.3Z" fill="#fff"/></svg>
+				<span>Open camera</span>
+				-->
+			</div>
+			<label for="file-input-camera">camera file</label>
+			<input class="file-input file-input--hidden" type="file" accept="image/*" id="file-input-camera" capture>
+			<!-- <input type="submit" value="upload camera file"> -->
+			<br><br>
+		</div>
+
+		<div class="desktop-debug">
+			<label for="file-input-desktop">image file</label>
+			<input class="" type="file" accept="image/*" id="file-input-desktop" capture>
+			<!-- <input type="submit" value="upload file"> -->
+		</div>
+
+	</form>
+
+	<img src="" id="captured-img" class="captured-img">
+
+	<div class="o-content-width">
+
+		
+
+		<div class="img-area" id="img-area">
+			<h2>Src img</h2>
+			<div id="swipe-area" class="swipe-area">
+				<img src="" id="captured-img" class="captured-img">
+				<img src="" id="captured-img-2" class="captured-img">
+			</div>
+
+		</div>
+		
+		<div id="src-img-container">
+			<!-- <img src="img/smiley.jpg" alt="" id="src-img">
+			<p>Source image</p> -->
+		</div>
+
+		
+		<h2>Canvas</h2>
+		<canvas id="canvas"></canvas>
+
+		<h2>Svg</h2>
+		<div id="svg-container"></div>
+		<p>
+			uses <a href="https://github.com/jankovicsandras/imagetracerjs">imagetracer.js</a> to create vector out of pixel img
+		</p>
+	</div>
+
+	<script src="vendor/imagetracer_v1.2.4.js"></script>
+	<script src="vendor/load-image.all.min.js"></script>
+	<script src="js/camera.js"></script>
+	<script src="js/main.js"></script>
+
+
+</body>
+</html>
