@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GCode</title>
+
+  <script type="text/javascript">
+    window.onload = function() {
+      var input = document.getElementById("input");
+      input.addEventListener("change", handleFile);
+    }
+
+    function handleFile(e) {
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext("2d");
+
+        var reader = new FileReader;
+        reader.onload = function (event) {
+            var img = new Image();
+            img.src = reader.result;
+            img.onload = function () {
+                canvas.width = img.width/3;
+                canvas.height = img.height/3;
+
+                ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+
+                // Do whatever image operation you need (resize/crop, visual effects, barcode detection, etc.+
+                // invertImage(ctx, canvas);
+
+                // You can even upload the new image to your server
+				// postCanvasDataToServer(canvas);
+				console.log('go do');
+				createSvgFromCanvas(canvas);
+            }
+        }
+        reader.readAsDataURL(e.target.files[0]);
+	}
+	
+	
+	/**
+	* 
+	* @returns {undefined}
+	*/
+	const createSvgFromCanvas = function(canvas) {
+		var imgd = ImageTracer.getImgdata( canvas );
+		console.log('imgd:', imgd);
+	 	
+	 	// Synchronous tracing to SVG string
+	 	var svgstr = ImageTracer.imagedataToSVG( imgd, { scale:5 } );
+	 
+	 	// Appending SVG
+	 	ImageTracer.appendSVGString( svgstr, 'svg-container' );
+	};
+
+    
+    
+  </script>
+</head>
+<body>
+  <h1>iOS6 Safari Photo Capture Demo</h1>
+  <input type="file" id="input" name="input" accept="image/*"></input>
+  <canvas id="canvas"></canvas>
+
+  <div id="svg-container"></div>
+
+  <script src="vendor/imagetracer_v1.2.4.js"></script>
+</body>
+</html>

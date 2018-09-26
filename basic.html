@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>iOS6 Safari Photo Capture Demo</title>
+
+  <script type="text/javascript">
+    window.onload = function() {
+      var input = document.getElementById("input");
+      input.addEventListener("change", handleFile);
+    }
+
+    function handleFile(e) {
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext("2d");
+
+        var reader = new FileReader;
+        reader.onload = function (event) {
+            var img = new Image();
+            img.src = reader.result;
+            img.onload = function () {
+                canvas.width = img.width/3;
+                canvas.height = img.height/3;
+
+                ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+
+                // Do whatever image operation you need (resize/crop, visual effects, barcode detection, etc.+
+                // invertImage(ctx, canvas);
+
+                // You can even upload the new image to your server
+                // postCanvasDataToServer(canvas);
+            }
+        }
+        reader.readAsDataURL(e.target.files[0]);
+    }
+
+    
+    
+    // An example of how you would post the image on the canvas to a server
+    function postCanvasDataToServer(canvas) {
+      var finalFile = canvas.toDataURL("image/png");
+
+      var postData = 'canvasData=' + finalFile;
+      var ajax = new XMLHttpRequest();
+      ajax.open('POST', 'upload_image', true);
+      ajax.setRequestHeader('Content-Type', 'canvas/upload');
+
+      ajax.onreadystatechange = function () {
+          if (ajax.readyState == 4) {
+              alert('posted');
+          }
+      }
+      ajax.send(postData);
+    }
+  </script>
+</head>
+<body>
+  <h1>iOS6 Safari Photo Capture Demo</h1>
+  <input type="file" id="input" name="input" accept="image/*"></input>
+  <canvas id="canvas"></canvas>
+
+</body>
+</html>
