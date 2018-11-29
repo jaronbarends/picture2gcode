@@ -74,6 +74,7 @@
 	*/
 	const createSvgFromCanvas = function(canvas) {
 		console.log('createSvgFromCanvas');
+		log('create svg from canvas...');
 		var imgd = ImageTracer.getImgdata( canvas );
 		console.log('imgd:', imgd);
 	 	
@@ -96,6 +97,7 @@
 	* @returns {undefined}
 	*/
 	const createCanvasFromImage = function(img) {
+		log('create canvas from image...');
 		const w = img.width/3;
 		const h = img.height/3;
 
@@ -103,33 +105,28 @@
 		inputCanvas.width = w;
 		inputCanvas.height = h;
 		const iCtx = inputCanvas.getContext("2d");
-
         const outputCanvas = document.getElementById('output-canvas');
 		outputCanvas.width = w;
 		outputCanvas.height = h;
+		// filtering doesn't really get it as dark as I want
+		// iCtx.filter = 'contrast(300%) saturate(0%)';
 		const oCtx = outputCanvas.getContext("2d");
 		
-		console.log('go draw input canvas');
-
+		log('draw input canvas...');
 		iCtx.drawImage(img, 0, 0, w, h);
-		console.log('drew inputCanvas');
-
+		
 		const inputImgData = iCtx.getImageData(0, 0, w, h);
 		let outputImgData = inputImgData;
-
 		outputImgData = contrastImage(outputImgData, 100);
 		outputImgData = contrastImage(outputImgData, 100);
 		outputImgData = convertImageToGrayscale(outputImgData);
 		outputImgData = applyThresholdToImage(outputImgData, 200);
-
+		
+		log('draw output canvas...');
 		oCtx.putImageData(outputImgData, 0, 0);
 
-		// Do whatever image operation you need (resize/crop, visual effects, barcode detection, etc.+
-		// invertImage(iCtx, canvas);
-
-		// You can even upload the new image to your server
-		// postCanvasDataToServer(canvas);
 		createSvgFromCanvas(outputCanvas);
+		log('');
 	};
 	
 
@@ -139,10 +136,12 @@
 	* @returns {undefined}
 	*/
 	const handleFile = function(e) {
-        var reader = new FileReader;
+		var reader = new FileReader;
+		log('read file...');
         reader.onload = function (event) {
             var img = new Image();
-            img.src = reader.result;
+			img.src = reader.result;
+			log('create image');
             img.onload = () => {
 				createCanvasFromImage(img);
             }
@@ -159,7 +158,6 @@
 	* @returns {undefined}
 	*/
 	const transformImageData = function(imgData, pixelFunction, options) {
-		console.log('options:', options);
 		let data = imgData.data;
 		for (let i=0, len=data.length; i < len; i += 4) {
 			data = pixelFunction(data, i, options);
@@ -240,6 +238,15 @@
 	};
 	
 
+	/**
+	* log msg to window
+	* @returns {undefined}
+	*/
+	const log = function(msg) {
+		const box = document.getElementById('log-win');
+		box.innerText = msg;
+	};
+	
 
 
 	/**

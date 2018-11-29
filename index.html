@@ -52,7 +52,7 @@
 
 		
 
-		<div class="img-area" id="img-area">
+		<!-- <div class="img-area" id="img-area">
 			<h2>Src img</h2>
 			<div id="swipe-area" class="swipe-area">
 				<img src="" id="captured-img" class="captured-img">
@@ -62,20 +62,31 @@
 		</div>
 		
 		<div id="src-img-container">
-			<!-- <img src="img/smiley.jpg" alt="" id="src-img">
-			<p>Source image</p> -->
+			<img src="img/smiley.jpg" alt="" id="src-img">
+			<p>Source image</p>
+		</div> -->
+
+		<div id="log-win"></div>
+		
+		<h2>Canvases</h2>
+		<div class="canvas-list">
+			<div class="canvas-box">
+				<h3>input</h3>
+				<canvas id="input-canvas"></canvas>
+			</div>
+			<div class="canvas-box">
+				<h3>output</h3>
+				<canvas id="output-canvas"></canvas>
+			</div>
+			<div>
+				<h3>Svg</h3>
+				<div id="svg-container"></div>
+				<p>
+					uses <a href="https://github.com/jankovicsandras/imagetracerjs">imagetracer.js</a> to create vector out of pixel img
+				</p>
+			</div>
 		</div>
 
-		
-		<h2>Canvas</h2>
-		<canvas id="input-canvas"></canvas>
-		<canvas id="output-canvas"></canvas>
-
-		<h2>Svg</h2>
-		<div id="svg-container"></div>
-		<p>
-			uses <a href="https://github.com/jankovicsandras/imagetracerjs">imagetracer.js</a> to create vector out of pixel img
-		</p>
 	</div>
 
 	<script src="vendor/imagetracer_v1.2.4.js"></script>

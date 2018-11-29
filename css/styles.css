@@ -1,3 +1,7 @@
+.canvas-list {
+	display: flex;
+}
+
 canvas {
 	width: 400px;
 }
