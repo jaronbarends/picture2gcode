@@ -117,9 +117,10 @@
 		const inputImgData = iCtx.getImageData(0, 0, w, h);
 		let outputImgData = inputImgData;
 
+		outputImgData = contrastImage(outputImgData, 100);
+		outputImgData = contrastImage(outputImgData, 100);
 		outputImgData = convertImageToGrayscale(outputImgData);
-		outputImgData = contrastImage(outputImgData, 100);
-		outputImgData = contrastImage(outputImgData, 100);
+		outputImgData = applyThresholdToImage(outputImgData, 200);
 
 		oCtx.putImageData(outputImgData, 0, 0);
 
@@ -147,7 +148,65 @@
             }
         }
         reader.readAsDataURL(e.target.files[0]);
-    }
+	}
+	
+
+	/**
+	* generic function for adjusting imageData
+	* @param {ImageData} imgData - The imageData object to transform
+	* @param {function} pixelFunction - Function to be called for every pixel in imageData
+	* @param {any} options - variable to pass to the pixelFunction
+	* @returns {undefined}
+	*/
+	const transformImageData = function(imgData, pixelFunction, options) {
+		console.log('options:', options);
+		let data = imgData.data;
+		for (let i=0, len=data.length; i < len; i += 4) {
+			data = pixelFunction(data, i, options);
+		}
+		return imgData;
+	};
+
+
+	/**
+	* 
+	* @returns {undefined}
+	*/
+	const convertPixelToGrayScale = function(data, i) {
+		// calculate avarage from rgb channels
+		const avg = (data[i] + data[i+1] + data[i+2])/3;
+		// put avarage value back in channels
+		data[i] = avg;
+		data[i+1] = avg;
+		data[i+2] = avg;
+
+		return data;
+	};
+
+
+	/**
+	* apply threshold to a value: values lower (darker) than threshold are set to 0; higher (lighter) are set to 255
+	* @returns {undefined}
+	*/
+	const applyThreshold = function(value, threshold) {
+		return (value < threshold ? 0 : 255);
+	};
+	
+	
+	
+	/**
+	* 
+	* @returns {undefined}
+	*/
+	const thresholdPixel = function(data, i, threshold) {
+		threshold = threshold || 0;
+		data[i] = applyThreshold(data[i], threshold);
+		data[i+1] = applyThreshold(data[i+1], threshold);
+		data[i+2] = applyThreshold(data[i+2], threshold);
+
+		return data;
+	};
+	
 
 	
 	function contrastImage(imgData, contrast){  //input range [-100..100]
@@ -168,25 +227,17 @@
 	* @returns {ImageData} imgData
 	*/
 	const convertImageToGrayscale = function(imgData) {
-		const data = imgData.data;
-		console.log(imgData);
-		for (let i=0, len=data.length; i < len; i += 4) {
-			// calculate avarage from rgb channels
-			const avg = (data[i] + data[i+1] + data[i+2])/3;
-			// put avarage value back in channels
-			data[i] = avg;
-			data[i+1] = avg;
-			data[i+2] = avg;
-
-			// if (i < 20) {
-			// 	console.log(avg);
-			// }
-		}
-		console.log(imgData);
-		return imgData;
+		return transformImageData(imgData, convertPixelToGrayScale);
 	};
-	
-	
+
+
+	/**
+	* apply threshold to imageData
+	* @returns {undefined}
+	*/
+	const applyThresholdToImage = function(imgData, threshold) {
+		return transformImageData(imgData, thresholdPixel, threshold);
+	};
 	
 
 
