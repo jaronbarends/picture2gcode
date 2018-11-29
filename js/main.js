@@ -125,9 +125,22 @@
 		log('draw output canvas...');
 		oCtx.putImageData(outputImgData, 0, 0);
 
-		createSvgFromCanvas(outputCanvas);
+		// createSvgFromCanvas(outputCanvas);
+
+		convertCanvasToImg(outputCanvas, 'output-img');
 		log('');
 	};
+
+
+	/**
+	* convert canvas to image
+	* @returns {undefined}
+	*/
+	const convertCanvasToImg = function(canvas, imgId) {
+		const dataUrl = canvas.toDataURL();
+		document.getElementById(imgId).src = dataUrl;
+	};
+	
 	
 
 	/**

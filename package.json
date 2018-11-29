@@ -1,0 +1,16 @@
+{
+  "name": "camera2gcode",
+  "version": "0.0.1",
+  "description": "create gcode from a picture taken with camera",
+  "main": "img2gcode-example.js",
+  "dependencies": {
+    "img2gcode": "^1.0.5",
+    "progress": "^2.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jarón barends",
+  "license": "ISC"
+}
