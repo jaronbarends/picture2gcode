@@ -42,15 +42,29 @@
 	* create a canvas element from an image
 	* @returns {undefined}
 	*/
-	const createCanvasFromImage = function() {
-		var canvas = document.getElementById('canvas');
-		console.log('canvas:', canvas);
+	const createCanvasFromImage_ = function() {
+		const canvas = document.getElementById('canvas');
+		const canvas2 = document.getElementById('canvas-2');
 		const img = document.getElementById('captured-img');
-		console.log('img:', img);
 		var ctx = canvas.getContext('2d');
+		var ctx2 = canvas2.getContext('2d');
 		ctx.drawImage(img, 0, 0, 500, 500);
+		ctx2.drawImage(img, 0, 0, 500, 500);
+
+		// enhanceImage(canvas2);
 		return canvas;
 	};
+
+
+	/**
+	* 
+	* @returns {undefined}
+	*/
+	const enhanceImage = function(canvas) {
+		const ctx = canvas.getContext('2d');
+		ctx.filter = 'blur(20px)';
+	};
+	
 	
 
 
@@ -59,6 +73,7 @@
 	* @returns {undefined}
 	*/
 	const createSvgFromCanvas = function(canvas) {
+		console.log('createSvgFromCanvas');
 		var imgd = ImageTracer.getImgdata( canvas );
 		console.log('imgd:', imgd);
 	 	
@@ -66,74 +81,114 @@
 	 	var svgstr = ImageTracer.imagedataToSVG( imgd, { scale:5 } );
 	 
 	 	// Appending SVG
-	 	ImageTracer.appendSVGString( svgstr, 'svg-container' );
+		 ImageTracer.appendSVGString( svgstr, 'svg-container' );
+		 
+		 
+		 const svgc = document.getElementById('svg-container');
+		 const svg = svgc.querySelector('svg');
+		 svg.setAttribute('viewBox', '0 0 5440 4080');
+		 svg.setAttribute('width', '544');
+		 svg.setAttribute('height', '408');
 	};
 
+	/**
+	* create a canvas from an image
+	* @returns {undefined}
+	*/
+	const createCanvasFromImage = function(img) {
+		const w = img.width/3;
+		const h = img.height/3;
 
-	function handleFile(e) {
-        var canvas = document.getElementById('canvas');
-        var ctx = canvas.getContext("2d");
+        const inputCanvas = document.getElementById('input-canvas');
+		inputCanvas.width = w;
+		inputCanvas.height = h;
+		const iCtx = inputCanvas.getContext("2d");
 
+        const outputCanvas = document.getElementById('output-canvas');
+		outputCanvas.width = w;
+		outputCanvas.height = h;
+		const oCtx = outputCanvas.getContext("2d");
+		
+		console.log('go draw input canvas');
+
+		iCtx.drawImage(img, 0, 0, w, h);
+		console.log('drew inputCanvas');
+
+		const inputImgData = iCtx.getImageData(0, 0, w, h);
+		let outputImgData = inputImgData;
+
+		outputImgData = convertImageToGrayscale(outputImgData);
+		outputImgData = contrastImage(outputImgData, 100);
+		outputImgData = contrastImage(outputImgData, 100);
+
+		oCtx.putImageData(outputImgData, 0, 0);
+
+		// Do whatever image operation you need (resize/crop, visual effects, barcode detection, etc.+
+		// invertImage(iCtx, canvas);
+
+		// You can even upload the new image to your server
+		// postCanvasDataToServer(canvas);
+		createSvgFromCanvas(outputCanvas);
+	};
+	
+
+	/**
+	* handle file being uploaded from input
+	* @param {event} e - input's change event
+	* @returns {undefined}
+	*/
+	const handleFile = function(e) {
         var reader = new FileReader;
         reader.onload = function (event) {
             var img = new Image();
             img.src = reader.result;
-            img.onload = function () {
-                canvas.width = img.width/3;
-				canvas.height = img.height/3;
-				
-				console.log('go draw');
-
-				ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
-				console.log('drew canvas');
-
-                // Do whatever image operation you need (resize/crop, visual effects, barcode detection, etc.+
-                // invertImage(ctx, canvas);
-
-                // You can even upload the new image to your server
-				// postCanvasDataToServer(canvas);
-				createSvgFromCanvas(canvas);
-				console.log('done');
+            img.onload = () => {
+				createCanvasFromImage(img);
             }
         }
         reader.readAsDataURL(e.target.files[0]);
     }
 
-	/**
-	* 
-	* @returns {undefined}
-	*/
-	const convertImageDataToCanvas = function(dataUri) {
-		image = document.getElementById('captured-img');
-		image2 = document.getElementById('captured-img-2');
-		image2.src = dataUri;
-		// var canvas = document.createElement("canvas");
-		var canvas = document.getElementById('canvas');
-		canvas.width = image2.width;
-		canvas.height = image2.height;
-		canvas.getContext("2d").drawImage(image2, 0, 0);
 	
-		return canvas;
+	function contrastImage(imgData, contrast){  //input range [-100..100]
+		var d = imgData.data;
+		contrast = (contrast/100) + 1;  //convert to decimal & shift range: [0..2]
+		var intercept = 128 * (1 - contrast);
+		for(var i=0;i<d.length;i+=4){   //r,g,b,a
+			d[i] = d[i]*contrast + intercept;
+			d[i+1] = d[i+1]*contrast + intercept;
+			d[i+2] = d[i+2]*contrast + intercept;
+		}
+		return imgData;
+	}
+
+
+	/**
+	* convert imgdata to grayscale
+	* @returns {ImageData} imgData
+	*/
+	const convertImageToGrayscale = function(imgData) {
+		const data = imgData.data;
+		console.log(imgData);
+		for (let i=0, len=data.length; i < len; i += 4) {
+			// calculate avarage from rgb channels
+			const avg = (data[i] + data[i+1] + data[i+2])/3;
+			// put avarage value back in channels
+			data[i] = avg;
+			data[i+1] = avg;
+			data[i+2] = avg;
+
+			// if (i < 20) {
+			// 	console.log(avg);
+			// }
+		}
+		console.log(imgData);
+		return imgData;
 	};
 	
 	
 	
 
-
-	/**
-	* handle new image being uploaded
-	* @returns {undefined}
-	*/
-	const newImageHandler = function(e) {
-		// console.log(e.detail);
-		// const canvas = createCanvasFromImage();
-		console.log('go create canvas');
-		// const canvas = convertImageToCanvas();
-		const canvas = convertImageDataToCanvas(e.detail.imgData);
-		console.log('done creating canvas', canvas);
-		createSvgFromCanvas(canvas);
-	};
-	
 
 
 	/**
