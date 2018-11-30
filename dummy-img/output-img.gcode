@@ -1,6 +1,6 @@
 ;---> this code is for cnc-ino <---
-; D:\Web\lab\_Github\gcode\repo\dummy-img\output-img.png
-; D:\Web\lab\_Github\gcode\repo\dummy-img\output-img.gcode
+; D:\Web\lab\_Github\picture2gcode\repo\dummy-img\output-img.png
+; D:\Web\lab\_Github\picture2gcode\repo\dummy-img\output-img.gcode
 ; Img Size: (816,816)pixel to (701.76,701.76)mm
 ; Process Error: 0%
 ; Tool Diameter: 1
@@ -66290,4 +66290,4 @@ G01 X420.1788 Y-211.1988 Z-2.0000
 G01 X421.0388 Y-212.9188 Z-2.0000
 G01 X421.0388 Y-212.9188 Z1; With new deep step
 G01 Z1; With Z max
-;Generated in 274.059 sec.
+;Generated in 285.058 sec.
