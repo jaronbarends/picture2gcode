@@ -1,7 +1,21 @@
 .canvas-list {
 	display: flex;
+	flex-direction: column;
+
+}
+
+@media (min-width: 640px) {
+	.canvas-list {
+		flex-direction: row;
+	}
 }
 
 canvas {
 	width: 400px;
+}
+
+.output-img {
+	display: block;
+	max-width: 100%;
+	height: auto;
 }
