@@ -1,3 +1,6 @@
+body {
+	background: #eee;
+}
 .canvas-list {
 	display: flex;
 	flex-direction: column;

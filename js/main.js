@@ -47,6 +47,7 @@
 		let outputCanvas;
 		let outputImgData = inputImgData;
 		outputImgData = contrastImage(outputImgData, 100);
+		console.log(outputImgData);
 		outputCanvas = addCanvas(outputImgData, 'contrast');
 		outputImgData = contrastImage(outputImgData, 100);
 		outputCanvas = addCanvas(outputImgData, 'contrast 2');
@@ -54,6 +55,7 @@
 		outputCanvas = addCanvas(outputImgData, 'grayscale');
 		outputImgData = applyThresholdToImage(outputImgData, 200);
 		outputCanvas = addCanvas(outputImgData, 'threshold');
+		console.log(outputImgData);
 		
 		createSvgFromCanvas(outputCanvas);
 		convertCanvasToImg(outputCanvas, 'output-img');
@@ -182,6 +184,9 @@
 		data[i] = applyThreshold(data[i], threshold);
 		data[i+1] = applyThreshold(data[i+1], threshold);
 		data[i+2] = applyThreshold(data[i+2], threshold);
+		if (data[i] === 255) {
+			data[i+3] = 0;
+		}
 
 		return data;
 	};
