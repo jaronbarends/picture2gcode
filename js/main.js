@@ -3,6 +3,9 @@
 	// const imgToVector
 	const srcImg = document.getElementById('src-img');
 	const vectorContainer = document.getElementById('vector-container');
+	const canvasList = document.getElementById(`canvas-list`);
+	let canvasW;
+	let canvasH;
 
 
 	/**
@@ -73,17 +76,14 @@
 	* @returns {undefined}
 	*/
 	const createSvgFromCanvas = function(canvas) {
-		console.log('createSvgFromCanvas');
 		log('create svg from canvas...');
 		var imgd = ImageTracer.getImgdata( canvas );
-		console.log('imgd:', imgd);
 	 	
 	 	// Synchronous tracing to SVG string
 	 	var svgstr = ImageTracer.imagedataToSVG( imgd, { scale:5 } );
 	 
 	 	// Appending SVG
 		 ImageTracer.appendSVGString( svgstr, 'svg-container' );
-		 
 		 
 		 const svgc = document.getElementById('svg-container');
 		 const svg = svgc.querySelector('svg');
@@ -98,38 +98,60 @@
 	*/
 	const createCanvasFromImage = function(img) {
 		log('create canvas from image...');
-		const w = img.width/3;
-		const h = img.height/3;
+		canvasW = img.width/3;
+		canvasH = img.height/3;
 
         const inputCanvas = document.getElementById('input-canvas');
-		inputCanvas.width = w;
-		inputCanvas.height = h;
+		inputCanvas.width = canvasW;
+		inputCanvas.height = canvasH;
 		const iCtx = inputCanvas.getContext("2d");
-        const outputCanvas = document.getElementById('output-canvas');
-		outputCanvas.width = w;
-		outputCanvas.height = h;
-		// filtering doesn't really get it as dark as I want
-		// iCtx.filter = 'contrast(300%) saturate(0%)';
-		const oCtx = outputCanvas.getContext("2d");
 		
 		log('draw input canvas...');
-		iCtx.drawImage(img, 0, 0, w, h);
+		iCtx.drawImage(img, 0, 0, canvasW, canvasH);
+		const inputImgData = iCtx.getImageData(0, 0, canvasW, canvasH);
 		
-		const inputImgData = iCtx.getImageData(0, 0, w, h);
+		let outputCanvas;
 		let outputImgData = inputImgData;
 		outputImgData = contrastImage(outputImgData, 100);
+		outputCanvas = addCanvas(outputImgData, 'contrast');
 		outputImgData = contrastImage(outputImgData, 100);
+		outputCanvas = addCanvas(outputImgData, 'contrast 2');
 		outputImgData = convertImageToGrayscale(outputImgData);
+		outputCanvas = addCanvas(outputImgData, 'grayscale');
 		outputImgData = applyThresholdToImage(outputImgData, 200);
+		outputCanvas = addCanvas(outputImgData, 'threshold');
 		
-		log('draw output canvas...');
-		oCtx.putImageData(outputImgData, 0, 0);
-
-		// createSvgFromCanvas(outputCanvas);
-
+		createSvgFromCanvas(outputCanvas);
 		convertCanvasToImg(outputCanvas, 'output-img');
+
 		log('');
 	};
+
+
+	/**
+	* add a canvas with an output-step
+	* @returns {undefined}
+	*/
+	const addCanvas = function(imgData, heading) {
+		log(`draw canvas for ${heading}...`);
+		const box = document.createElement('div');
+		box.classList.add('canvas-box');
+		const hd = document.createElement('h3');
+		hd.textContent = heading;
+		box.appendChild(hd);
+
+		const canvas = document.createElement('canvas');
+		canvas.classList.add('media');
+		const ctx = canvas.getContext('2d');
+		canvas.width = canvasW;
+		canvas.height = canvasH;
+		ctx.putImageData(imgData, 0, 0);
+		box.appendChild(canvas);
+		canvasList.appendChild(box);
+
+		return canvas;
+	};
+	
 
 
 	/**
