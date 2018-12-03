@@ -69,25 +69,25 @@
 		<div id="log-win"></div>
 		
 		<h2>Canvases</h2>
+		<div id="canvas-list" class="canvas-list">
+			<div class="canvas-box">
+				<h3>Original input</h3>
+				<canvas class="media" id="input-canvas"></canvas>
+			</div>
+		</div>
+
+		<h2>Output</h2>
 		<div class="canvas-list">
 			<div class="canvas-box">
-				<h3>input</h3>
-				<canvas id="input-canvas"></canvas>
-			</div>
-			<div class="canvas-box">
-				<h3>output</h3>
-				<canvas id="output-canvas"></canvas>
-			</div>
-			<div class="canvas-box">
-				<h3>output png</h3>
-				<img id="output-img" class="output-img" alt="">
-			</div>
-			<div>
-				<h3>Svg</h3>
+				<h3>Output svg</h3>
 				<div id="svg-container"></div>
-				<p>
+				<!-- <p>
 					uses <a href="https://github.com/jankovicsandras/imagetracerjs">imagetracer.js</a> to create vector out of pixel img
-				</p>
+				</p> -->
+			</div>
+			<div id="output-canvas-box" class="canvas-box">
+				<h3>Output png</h3>
+				<img id="output-img" class="media output-img media" alt="">
 			</div>
 		</div>
 

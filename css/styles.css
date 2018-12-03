@@ -10,8 +10,14 @@
 	}
 }
 
-canvas {
-	width: 400px;
+.canvas-box {
+	flex: 1 1 auto;
+}
+
+.media {
+	width: 100%;
+	max-width: 400px;
+	height: auto;
 }
 
 .output-img {
