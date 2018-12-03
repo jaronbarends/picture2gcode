@@ -1,74 +1,8 @@
 ;(function() {
 
-	// const imgToVector
-	const srcImg = document.getElementById('src-img');
-	const vectorContainer = document.getElementById('vector-container');
 	const canvasList = document.getElementById(`canvas-list`);
 	let canvasW;
 	let canvasH;
-
-
-	/**
-	* create a vector out of ...
-	* @returns {undefined}
-	*/
-	const createVectorFromImg = function() {
-		ImageTracer.imageToSVG(
-
-			'img/smiley.jpg', /* input filename / URL */
-			
-			function(svgstr){ ImageTracer.appendSVGString( svgstr, 'svg-container' ); }, /* callback function to run on SVG string result */
-			
-			'posterized2' /* Option preset */
-			
-		);
-	};
-
-
-	/**
-	* create an svg from image data
-	* @returns {undefined}
-	*/
-	const createSvgFromImgData = function(imgData) {
-		console.log('go create from', imgData);
-		// var imgd = ImageTracer.getImgdata( canvas );
-	 	
-	 	// Synchronous tracing to SVG string
-	 	var svgstr = ImageTracer.imagedataToSVG( imgData, { scale:5 } );
-	 
-	 	// Appending SVG
-	 	ImageTracer.appendSVGString( svgstr, 'svg-container' );
-	};
-
-
-	/**
-	* create a canvas element from an image
-	* @returns {undefined}
-	*/
-	const createCanvasFromImage_ = function() {
-		const canvas = document.getElementById('canvas');
-		const canvas2 = document.getElementById('canvas-2');
-		const img = document.getElementById('captured-img');
-		var ctx = canvas.getContext('2d');
-		var ctx2 = canvas2.getContext('2d');
-		ctx.drawImage(img, 0, 0, 500, 500);
-		ctx2.drawImage(img, 0, 0, 500, 500);
-
-		// enhanceImage(canvas2);
-		return canvas;
-	};
-
-
-	/**
-	* 
-	* @returns {undefined}
-	*/
-	const enhanceImage = function(canvas) {
-		const ctx = canvas.getContext('2d');
-		ctx.filter = 'blur(20px)';
-	};
-	
-	
 
 
 	/**
@@ -78,18 +12,18 @@
 	const createSvgFromCanvas = function(canvas) {
 		log('create svg from canvas...');
 		var imgd = ImageTracer.getImgdata( canvas );
-	 	
-	 	// Synchronous tracing to SVG string
-	 	var svgstr = ImageTracer.imagedataToSVG( imgd, { scale:5 } );
-	 
-	 	// Appending SVG
-		 ImageTracer.appendSVGString( svgstr, 'svg-container' );
-		 
-		 const svgc = document.getElementById('svg-container');
-		 const svg = svgc.querySelector('svg');
-		 svg.setAttribute('viewBox', '0 0 5440 4080');
-		 svg.setAttribute('width', '544');
-		 svg.setAttribute('height', '408');
+		
+		// Synchronous tracing to SVG string
+		var svgstr = ImageTracer.imagedataToSVG( imgd, { scale:5 } );
+		
+		// Appending SVG
+		ImageTracer.appendSVGString( svgstr, 'svg-container' );
+
+		const svgc = document.getElementById('svg-container');
+		const svg = svgc.querySelector('svg');
+		svg.setAttribute('viewBox', '0 0 5440 4080');
+		svg.setAttribute('width', '544');
+		svg.setAttribute('height', '408');
 	};
 
 	/**
@@ -101,7 +35,7 @@
 		canvasW = img.width/3;
 		canvasH = img.height/3;
 
-        const inputCanvas = document.getElementById('input-canvas');
+		const inputCanvas = document.getElementById('input-canvas');
 		inputCanvas.width = canvasW;
 		inputCanvas.height = canvasH;
 		const iCtx = inputCanvas.getContext("2d");
@@ -135,7 +69,7 @@
 	const addCanvas = function(imgData, heading) {
 		log(`draw canvas for ${heading}...`);
 		const box = document.createElement('div');
-		box.classList.add('canvas-box');
+		box.classList.add('canvas-box', 'generated');
 		const hd = document.createElement('h3');
 		hd.textContent = heading;
 		box.appendChild(hd);
@@ -151,6 +85,17 @@
 
 		return canvas;
 	};
+
+
+	/**
+	* remove dynamically added canvasses
+	* @returns {undefined}
+	*/
+	const removeCanvases = function() {
+		const canvasBoxes = Array.from(document.querySelectorAll(`.generated`));
+		canvasBoxes.forEach(box => box.remove());
+	};
+	
 	
 
 
@@ -171,17 +116,18 @@
 	* @returns {undefined}
 	*/
 	const handleFile = function(e) {
+		removeCanvases();
 		var reader = new FileReader;
 		log('read file...');
-        reader.onload = function (event) {
-            var img = new Image();
+		reader.onload = function (event) {
+			var img = new Image();
 			img.src = reader.result;
 			log('create image');
-            img.onload = () => {
+			img.onload = () => {
 				createCanvasFromImage(img);
-            }
-        }
-        reader.readAsDataURL(e.target.files[0]);
+			}
+		}
+		reader.readAsDataURL(e.target.files[0]);
 	}
 	
 
@@ -289,12 +235,10 @@
 	* @returns {undefined}
 	*/
 	const addEventListeners = function() {
-		// document.body.addEventListener('newimagedata', newImageHandler);
 		document.getElementById('file-input-desktop').addEventListener('change', handleFile);
 		document.getElementById('file-input-camera').addEventListener('change', handleFile);
 		// document.getElementById('image-form').addEventListener('submit', submitHandler);
 	};
-	
 
 
 	var init = function() {

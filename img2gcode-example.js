@@ -12,7 +12,7 @@ img2gcode
     blackZ: -2,
     safeZ: 1,
     info: "emitter", // "none" or "console" or "emitter"
-    dirImg: __dirname + '/dummy-img/output/output-img.png'
+    dirImg: __dirname + '/dummy-img/output/download.png'
   })
   .on('log', (str) => {
     console.log(str);
@@ -23,3 +23,5 @@ img2gcode
   .then((data) => {
     console.log(data.dirgcode);
   });
+
+  // view with http://www.tomasw.com/gcodesim/
